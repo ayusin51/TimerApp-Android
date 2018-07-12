@@ -8,14 +8,14 @@
 
 
     <TextView
-        android:id="@+id/list_note_title"
+        android:id="@+id/timer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/list_note_date"
+        android:id="@+id/timer_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Small Text"
@@ -26,5 +26,5 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/list_note_content"/>
+        android:id="@+id/timer_duration"/>
 </LinearLayout>

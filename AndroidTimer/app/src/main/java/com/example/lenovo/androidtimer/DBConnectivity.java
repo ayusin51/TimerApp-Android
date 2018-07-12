@@ -17,66 +17,83 @@ public class DBConnectivity {
 
     Context context;
     SQLiteDatabase db;
-    static int count = 0;
 
     public DBConnectivity(Context context) {
         this.context = context;
         db = context.openOrCreateDatabase("timerDB",MODE_PRIVATE,null);
-        db.execSQL("create table if not exists Timers (timer_date VARCHAR, timer_name VARCHAR, timer_duration VARCHAR)");
+        db.execSQL("create table if not exists Timers (timer_date VARCHAR, timer_name VARCHAR, timer_duration number)");
     }
 
-    void AddTimer(String duration, String name){
+    void AddTimer(int duration, String name){
 
         Log.d("timer", "func called");
 
         if(name.isEmpty()) {
-            String cnt = Integer.toString(count);
-            name = "Timer " + cnt;
+            Integer count = 0;
+            try {
+                Cursor c = db.rawQuery("SELECT count() as MAX FROM Timers", null);
+                int index;
+
+                if (c.moveToFirst()) {
+                    index = c.getColumnIndex("MAX");
+                    count = c.getInt(index) + 1;
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            //String cnt = Integer.toString(count);
+            name = "Timer " + Integer.toString(count);
             Log.d("name", "empty");
         }
         try {
-            /*Cursor c = db.rawQuery("select date() as date", null);
-            int index = c.getColumnIndex("date");
-            String sysdate = c.getString(index);*/
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             Log.d("Time Now", dateFormat.format(date));
             String sysdate = dateFormat.format(date);
 
-            db.execSQL("insert into Timers values('"+sysdate+"', '" + name + "', '"+ duration +"')");
-            Log.i("Timer", "Success");
-            Log.d("SYSDATE", sysdate);
-            count++;
+            db.execSQL("insert into Timers values('"+sysdate+"', '" + name + "', "+ duration +")");
 
         }catch (Exception e){
             e.printStackTrace();
-            Log.d("Error", "exception");
         }
 
     }
 
-    ArrayList<String> getTimers() {
+    ArrayList<Timers> getTimers() {
 
         Log.d("gettimer", "func called");
 
-        ArrayList<String> timers = new ArrayList<>();
+        ArrayList<Timers> timers = new ArrayList<>();
         try{
-            Cursor c = db.rawQuery("SELECT * FROM Timers",null);
+            Cursor c = db.rawQuery("SELECT MAX(timer_duration) as MAX FROM Timers", null);
+            int index;
+            int max_dur = 0;
+            if(c.moveToFirst()) {
+                index = c.getColumnIndex("MAX");
+                max_dur = c.getInt(index);
+            }
+            c = db.rawQuery("SELECT * FROM Timers",null);
             if(c.moveToFirst()) {
                 do {
-                    int index = c.getColumnIndex("timer_date");
+                    index = c.getColumnIndex("timer_date");
                     String date = c.getString(index);
 
                     index = c.getColumnIndex("timer_name");
                     String name = c.getString(index);
 
                     index = c.getColumnIndex("timer_duration");
-                    String duration = c.getString(index);
+                    Integer duration = c.getInt(index);
+
+                    if(duration >= max_dur) {
+                        name = name + " (BEST)";
+                    }
 
                     Log.d("gettimer", "func middle");
 
-                    timers.add(date + " " + name + " " + duration);
+                    Timers timer = new Timers(name, date, duration.toString());
+
+                    timers.add(timer);
                 } while (c.moveToNext());
                // Toast.makeText(context, "Timers got successfully", Toast.LENGTH_SHORT).show();
             }

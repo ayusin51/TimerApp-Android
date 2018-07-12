@@ -20,6 +20,7 @@ import static com.example.lenovo.androidtimer.R.raw.beep;
 public class TimerActivity extends AppCompatActivity {
 
     TextView time_text_view;
+    EditText timerName;
     int time;
     SeekBar seekBar;
     DBConnectivity db;
@@ -68,9 +69,10 @@ public class TimerActivity extends AppCompatActivity {
 
             public void onClick(View view) {
                 time_text_view = findViewById(R.id.time_text_view);
-                EditText timerName = findViewById(R.id.timerName);
-
-                db.AddTimer(time_text_view.getText().toString(), timerName.getText().toString());
+                timerName = findViewById(R.id.timerName);
+                String text = time_text_view.getText().toString();
+                String t = text.substring(0, text.indexOf('s')-1);
+                final int timer_time = Integer.parseInt(t);
 
                 new CountDownTimer(time*1000, 1000) {
 
@@ -84,6 +86,8 @@ public class TimerActivity extends AppCompatActivity {
 
                         time_text_view.setText("0 secs");
                         seekBar.setProgress(0);
+                        db.AddTimer(timer_time, timerName.getText().toString());
+                        Toast.makeText(getApplicationContext(), Integer.toString(timer_time)+" secs over !!", Toast.LENGTH_SHORT).show();
                         mp.start();
                     }
                 }.start();

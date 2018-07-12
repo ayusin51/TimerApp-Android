@@ -17,16 +17,21 @@ public class ViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view);
 
         //Toast.makeText(getApplicationContext(), "Timers Page", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         ListView timerList = findViewById(R.id.timerList);
         DBConnectivity db = new DBConnectivity(getApplicationContext());
-        ArrayList<String> list = db.getTimers();
+        ArrayList<Timers> list = db.getTimers();
 
         if(list.size() == 0) {
             Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+        TimerAdapter adapter = new TimerAdapter(getApplicationContext(), list);
 
         timerList.setAdapter(adapter);
     }

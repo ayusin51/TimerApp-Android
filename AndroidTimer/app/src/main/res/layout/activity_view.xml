@@ -10,7 +10,10 @@
         android:id="@+id/timerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/colorBlack"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="1.5dp"
+        >
 
     </ListView>
 
