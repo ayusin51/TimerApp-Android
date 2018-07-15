@@ -86,7 +86,7 @@ public class DBConnectivity {
                     Integer duration = c.getInt(index);
 
                     if(duration >= max_dur) {
-                        name = name + " (BEST)";
+                        name = name + " (HIGHEST)";
                     }
 
                     Log.d("gettimer", "func middle");

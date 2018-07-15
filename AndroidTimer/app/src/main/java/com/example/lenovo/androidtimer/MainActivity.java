@@ -2,31 +2,37 @@ package com.example.lenovo.androidtimer;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new CountDownTimer(1500, 1000) {
+        GifImageView gifImageView = findViewById(R.id.GifImageView2);
+        gifImageView.setGifImageResource(R.drawable.splash2);
 
-            public void onTick(long millisUntilFinished) {
-                //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-                //Toast.makeText(MainActivity.this, "Ticked", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onFinish() {
-                //mTextField.setText("done!");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
                 Intent intent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(intent);
                 finish();
             }
-        }.start();
+        }, 3000);
+
     }
 }

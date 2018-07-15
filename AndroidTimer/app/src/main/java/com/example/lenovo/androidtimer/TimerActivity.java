@@ -30,7 +30,7 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
 
         seekBar = findViewById(R.id.timer_seekbar);
-        Button start = findViewById(R.id.start_stop_button);
+        final Button start = findViewById(R.id.start_stop_button);
 
         db = new DBConnectivity(getApplicationContext());
 
@@ -80,15 +80,19 @@ public class TimerActivity extends AppCompatActivity {
                         //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
                         seekBar.setProgress(time);
                         time_text_view.setText(Integer.toString(--time) + " secs");
+                        start.setEnabled(false);
+                        if(time == 0) onFinish();
                     }
 
                     public void onFinish() {
 
                         time_text_view.setText("0 secs");
                         seekBar.setProgress(0);
+                        start.setEnabled(true);
                         db.AddTimer(timer_time, timerName.getText().toString());
-                        Toast.makeText(getApplicationContext(), Integer.toString(timer_time)+" secs over !!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Time over !!", Toast.LENGTH_SHORT).show();
                         mp.start();
+                        cancel();
                     }
                 }.start();
             }
